@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "stigmatabyministry-c59b"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "stigmatabyministry-c59b"
+  template:
+    metadata:
+      labels:
+        app: "stigmatabyministry-c59b"
+    spec:
+      containers:
+        - name: "stigmatabyministry-c59b"
+          image: "acrdemo29700.azurecr.io/stigmatabyministry"
+          ports:
+          - containerPort: 80
