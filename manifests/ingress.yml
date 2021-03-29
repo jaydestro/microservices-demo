@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: "stigmatabyministry-c59b"
+    labels:
+        app: "stigmatabyministry-c59b"
+    annotations:
+        kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+    rules:
+        - host: stigmatabyministrya56c-stigmatabyministry-c59b.750c570be2614f94a4b8.eastus.aksapp.io
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: "stigmatabyministry-c59b"
+                servicePort: 80
