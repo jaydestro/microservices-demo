@@ -1,5 +1,5 @@
 {{- if .Values.zipkin.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zipkin-cron
@@ -7,6 +7,9 @@ metadata:
     name: zipkin-cron
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: zipkin-cron
   template:
     metadata:
       labels:
@@ -14,7 +17,7 @@ spec:
     spec:
       containers:
       - name: zipkin-cron
-        image: openzipkin/zipkin-dependencies:1.4.0
+        image: {{if .Values.global.registry}}{{ .Values.global.registry }}/{{end}}{{ .Values.zipkincron.image.repo }}:{{ .Values.zipkincron.image.tag }}
         env:
         - name: STORAGE_TYPE
           value: mysql
@@ -26,4 +29,6 @@ spec:
           value: zipkin
         command: ["crond"]
         args: ["-f"]
+        resources:
+{{ toYaml .Values.zipkincron.resources | indent 10 }}
 {{- end -}}

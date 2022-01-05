@@ -1,5 +1,5 @@
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogue-db
@@ -7,6 +7,9 @@ metadata:
     name: catalogue-db
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: catalogue-db
   template:
     metadata:
       labels:
@@ -14,7 +17,7 @@ spec:
     spec:
       containers:
       - name: catalogue-db
-        image: weaveworksdemos/catalogue-db:0.3.0
+        image: {{if .Values.global.registry}}{{ .Values.global.registry }}/{{end}}{{ .Values.cataloguedb.image.repo }}:{{ .Values.cataloguedb.image.tag }}
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: fake_password
@@ -23,3 +26,6 @@ spec:
         ports:
         - name: mysql
           containerPort: 3306
+        resources:
+{{ toYaml .Values.cataloguedb.resources | indent 10 }}
+

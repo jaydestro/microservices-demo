@@ -1,5 +1,5 @@
 {{- if .Values.zipkin.enabled -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: zipkin
@@ -7,6 +7,9 @@ metadata:
     name: zipkin
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      name: zipkin
   template:
     metadata:
       labels:
@@ -14,7 +17,7 @@ spec:
     spec:
       containers:
       - name: zipkin
-        image: openzipkin/zipkin
+        image: {{if .Values.global.registry}}{{ .Values.global.registry }}/{{end}}{{ .Values.zipkin.image.repo }}:{{ .Values.zipkin.image.tag }}
         ports:
         - containerPort: 9411
         env:
@@ -22,4 +25,6 @@ spec:
           value: mysql
         - name: MYSQL_HOST
           value: zipkin-mysql
+        resources:
+{{ toYaml .Values.zipkinmysql.resources | indent 10 }}
 {{- end -}}
